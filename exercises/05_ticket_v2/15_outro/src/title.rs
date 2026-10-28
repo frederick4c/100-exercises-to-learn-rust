@@ -2,7 +2,47 @@
 //   enforcing that the title is not empty and is not longer than 50 bytes.
 //   Implement the traits required to make the tests pass too.
 
+#[derive(Debug, thiserror::Error)]
+pub enum TicketNewError {
+    #[error("Title cannot be empty")]
+    TitleCannotBeEmpty,
+    #[error("Title cannot be longer than 50 bytes")]
+    TitleTooLong,
+    #[error("Description cannot be empty")]
+    DescriptionCannotBeEmpty,
+    #[error("Description cannot be longer than 500 bytes")]
+    DescriptionTooLong,
+    #[error("{invalid_status}")]
+    ParseStatusError { 
+        #[from]
+        invalid_status: status::ParseStatusError
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
 pub struct TicketTitle(String);
+
+#[derive(Debug, thiserror::Error)]
+#[error("{invalid_title} is not a valid title")]
+pub struct ParseTitleError {
+    invalid_title: String
+}
+
+impl TryFrom<String> for TicketTitle{
+    type Error = ParseTitleError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        value.as_str().try_into()
+    }
+}
+
+impl TryFrom<&str> for TicketTitle{
+    type Error = ParseTitleError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value 
+    }
+}
 
 #[cfg(test)]
 mod tests {
